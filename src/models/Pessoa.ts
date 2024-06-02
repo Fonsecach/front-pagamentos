@@ -7,12 +7,12 @@ export interface Pessoa{
     contatos: Contato[];
     criadoEm: Date;
 }
-enum TipoPessoa {
+export enum TipoPessoa {
     Fisica = 1,
     Juridica = 2,
   }
 
-interface Endereco {
+export interface Endereco {
     id: number;
     logradouro: string | null;
     bairro: string | null;
@@ -20,9 +20,8 @@ interface Endereco {
     estado: string | null;
     cep: string | null;
     pessoaId: number;
-  }
-
-interface Contato {
+}
+export interface Contato {
     id: number;
     email: string | null;
     whatsapp: string | null;
