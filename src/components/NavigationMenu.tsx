@@ -14,8 +14,18 @@ const NavigationMenu = () => {
         {
             label: 'Pessoas',
             icon: 'pi pi-user',
-            command: () => navigate('/pessoas')
-        
+            items: [
+                {
+                    label: 'Listar',
+                    icon: 'pi pi-list',
+                    command: () => navigate('/pessoas')
+                },
+                {
+                    label: 'Cadastrar',
+                    icon: 'pi pi-user-plus',
+                    command: () => navigate('/pessoas/cadastrar')
+                }
+            ]           
         },
         {
             label: 'Pedidos',

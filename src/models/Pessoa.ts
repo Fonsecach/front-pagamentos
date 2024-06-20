@@ -14,7 +14,7 @@ export interface Pessoa {
     observacoes?: string; 
   }
   
-  enum TipoPessoa {
+  export enum TipoPessoa {
     Fisica = "Fisica",
     Juridica = "Juridica"
   }

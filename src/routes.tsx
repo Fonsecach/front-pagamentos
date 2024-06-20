@@ -8,6 +8,7 @@ import NavigationMenu from '../src/components/NavigationMenu';
 import Pessoas from './components/pages/Pessoas';
 import Pedidos from './components/pages/Pedidos';
 import Pagamentos from './components/pages/Pagamentos';
+import PessoaCadastrar from './components/pages/PessoaCadastrar';
 
 const AppRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/pessoas" element={<Pessoas />} />
+        <Route path="/pessoas/cadastrar" element={<PessoaCadastrar />} />
         <Route path="/pagamentos" element={<Pagamentos />} />
         <Route path="/pedidos" element={<Pedidos />} />
         <Route path="*" element={<NotFound />} />

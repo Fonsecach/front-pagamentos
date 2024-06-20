@@ -3,6 +3,9 @@ import { Pessoa } from '../../models/Pessoa';
 import axios from 'axios';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { Divider } from 'primereact/divider';
+import { Link } from 'react-router-dom';
 
 function Pessoas() {
 
@@ -23,7 +26,11 @@ function Pessoas() {
 
   return (
     <div>
-        <h1>Lista de pessoas</h1>
+        <h1>Lista de Pessoas</h1>
+        <Divider align="right">
+            <Link to="/pessoas/cadastrar"><Button label="Cadastrar" icon="pi pi-user-plus" className="p-button-outlined"></Button></Link>
+        </Divider>
+
         <div className="card">
           <DataTable value={pessoas} tableStyle={{ minWidth: '50rem' }}> 
             <Column field='nome' header='Nome'></Column>
