@@ -1,19 +1,14 @@
 export interface Pessoa {
-    id: number; 
+    id: number | null; 
     nome?: string; 
     nomeFantasia?: string; 
     numDocumento?: string; 
-    tipo: TipoPessoa; 
-    enderecos?: Enderecos[]; 
-    contatos?: Contato[];
-    criadoEm: Date; 
-    atualizadoEm?: Date; 
+    tipo: string; 
+    enderecos?: Enderecos[] | null;
+    contatos?: Contato[] | null;
+    criadoEm: Date | string;
+    atualizadoEm?: Date | string;
     observacoes?: string; 
-  }
-  
-  export enum TipoPessoa {
-    Fisica = "Fisica",
-    Juridica = "Juridica"
   }
   
   export interface Enderecos {
