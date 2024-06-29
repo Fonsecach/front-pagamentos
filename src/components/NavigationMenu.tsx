@@ -30,12 +30,34 @@ const NavigationMenu = () => {
         {
             label: 'Pedidos',
             icon: 'pi pi-list',
-            command: () => navigate('/pedidos')
+            items: [
+                {
+                    label: 'Listar',
+                    icon: 'pi pi-list',
+                    command: () => navigate('/pedidos')
+                },
+                {
+                    label: 'Cadastrar',
+                    icon: 'pi pi-cart-plus',
+                    command: () => navigate('/pedidos/cadastrar')
+                }
+            ]
         },
         {
             label: 'Pagamentos',
             icon: 'pi pi-dollar',
-            command: () => navigate('/pagamentos')
+            items: [
+                {
+                    label: 'Listar',
+                    icon: 'pi pi-list',
+                    command: () => navigate('/pagamentos')
+                },
+                {
+                    label: 'Cadastrar',
+                    icon: 'pi pi-receipt',
+                    command: () => navigate('/pagamentos/cadastrar')
+                }
+            ]
         },
         {
             label: 'Sobre',

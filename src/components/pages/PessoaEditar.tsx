@@ -38,7 +38,7 @@ function PessoaEditar() {
   useEffect(() => {
     const carregarDadosPessoa = async () => {
       try {
-        const response = await axios.get(`http://localhost:5241/api/pessoas/${id}`);
+        const response = await axios.get(`http://localhost:5241/exibir/id/${id}`);
         const pessoa: Pessoa = response.data;
 
         // Preencher os estados com os dados da pessoa
