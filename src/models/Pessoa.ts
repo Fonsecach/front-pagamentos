@@ -1,21 +1,33 @@
-import { Enderecos } from './Enderecos';
-import { Contato } from './Contatos';
-
 export interface Pessoa {
-    id: number; 
+    id?: number | null; 
     nome?: string; 
     nomeFantasia?: string; 
     numDocumento?: string; 
-    tipo: TipoPessoa; 
-    enderecos?: Enderecos[]; 
-    contatos?: Contato[];
-    criadoEm: Date; 
-    atualizadoEm?: Date; 
+    tipo: string; 
+    enderecos?: Enderecos[] | null;
+    contatos?: Contato[] | null;
+    criadoEm: Date | string;
+    atualizadoEm?: Date | string;
     observacoes?: string; 
   }
   
-  enum TipoPessoa {
-    Fisica = "Fisica",
-    Juridica = "Juridica"
+  export interface Enderecos {
+    id: number; 
+    logradouro?: string; 
+    numero?: string;   
+    complemento?: string; 
+    bairro?: string;     
+    cidade?: string;     
+    estado?: string;     
+    cep?: string;        
+    pessoaId: number;   
+  }
+
+  export interface Contato {
+    id: number; 
+    email?: string;  
+    whatsapp?: string; 
+    telefone?: string; 
+    pessoaId: number; 
   }
   
