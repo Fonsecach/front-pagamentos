@@ -1,5 +1,5 @@
 export interface Pessoa {
-    id: number | null; 
+    id?: number | null; 
     nome?: string; 
     nomeFantasia?: string; 
     numDocumento?: string; 

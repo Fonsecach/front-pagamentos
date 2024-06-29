@@ -5,11 +5,12 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Pessoas() {
-
   const [pessoas, setPessoas] = useState<Pessoa[]>([]); 
+  const navigate = useNavigate();
+
   useEffect(() => {
     console.log('Componente inicializado');
     fetchPessoas();
@@ -22,6 +23,22 @@ function Pessoas() {
     } catch (error) {
       console.error('Erro ao buscar a lista de pessoas:', error);
     }
+  }
+
+  function DeletarPessoas(id: number) {
+    axios.delete(`http://localhost:5241/api/pessoas/deletar/${id}`)
+      .then(response => {
+        if (response.status === 200) {
+          fetchPessoas();
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao deletar a pessoa:', error);
+      });
+  }
+
+  function EditarPessoas(id: number) {
+    navigate(`/pessoas/editar/${id}`);
   }
 
   return (
@@ -37,6 +54,12 @@ function Pessoas() {
             <Column field='nomeFantasia' header='Nome fantasia'></Column>
             <Column field='numDocumento' header='Documento'></Column>
             <Column field='observacoes' header='Observações'></Column>
+            <Column field='id' header='' body={(rowData) => (
+              <Button icon="pi pi-pencil" className="p-button-outlined" onClick={() => EditarPessoas(rowData.id)} />
+            )}></Column>
+            <Column field='id' header='' body={(rowData) => (
+              <Button icon="pi pi-trash" className="p-button-outlined" onClick={() => DeletarPessoas(rowData.id)} />
+            )}></Column>
           </DataTable>
         </div>
     </div>

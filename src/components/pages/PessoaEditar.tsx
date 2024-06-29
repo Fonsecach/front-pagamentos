@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Pessoa } from '../../models/Pessoa';
 import axios from 'axios';
 import { Card } from 'primereact/card';
@@ -8,15 +9,17 @@ import { RadioButton } from 'primereact/radiobutton';
 import './PessoaCadastrar.css';
 import { Toast } from 'primereact/toast';
 
-function PessoaCadastrar() {
+function PessoaEditar() {
+  const { id } = useParams<{ id: string }>();
+  
+  // Estados para os dados da pessoa
   const [nome, setNome] = useState("");
   const [nomeFantasia, setNomeFantasia] = useState("");
   const [numDocumento, setNumDocumento] = useState("");
   const [tipo, setTipo] = useState("");
-  const [criadoEm] = useState<Date>(new Date());
-  const [atualizadoEm] = useState<Date>(new Date());
   const [observacoes, setObservacoes] = useState("");
 
+  // Estados para o endereço
   const [logradouro, setLogradouro] = useState("");
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
@@ -25,85 +28,99 @@ function PessoaCadastrar() {
   const [estado, setEstado] = useState("");
   const [cep, setCep] = useState("");
 
+  // Estados para o contato
   const [email, setEmail] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [telefone, setTelefone] = useState("");
 
   const toast = useRef<Toast>(null);
 
-  const cadastrarPessoa = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const carregarDadosPessoa = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5241/api/pessoas/${id}`);
+        const pessoa: Pessoa = response.data;
+
+        // Preencher os estados com os dados da pessoa
+        setNome(pessoa.nome || "");
+        setNomeFantasia(pessoa.nomeFantasia || "");
+        setNumDocumento(pessoa.numDocumento || "");
+        setTipo(pessoa.tipo || "");
+        setObservacoes(pessoa.observacoes || "");
+
+        // Preencher os estados com os dados do endereço (se houver)
+        if (pessoa.enderecos && pessoa.enderecos.length > 0) {
+          const endereco = pessoa.enderecos[0];
+          setLogradouro(endereco.logradouro || "");
+          setNumero(endereco.numero || "");
+          setComplemento(endereco.complemento || "");
+          setBairro(endereco.bairro || "");
+          setCidade(endereco.cidade || "");
+          setEstado(endereco.estado || "");
+          setCep(endereco.cep || "");
+        }
+        
+        // Preencher os estados com os dados do contato (se houver)
+        if (pessoa.contatos && pessoa.contatos.length > 0) {
+          const contato = pessoa.contatos[0];
+          setEmail(contato.email || "");
+          setWhatsapp(contato.whatsapp || "");
+          setTelefone(contato.telefone || "");
+        }
+      } catch (error) {
+        console.error('Erro ao carregar dados da pessoa:', error);
+      }
+    };
+
+    carregarDadosPessoa();
+  }, [id]);
+
+  const atualizarPessoa = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const pessoa: Pessoa = {
-      id: 0, 
+    if (!id) {
+      console.error('ID não fornecido');
+      return;
+    }
+
+    // Montar o objeto Pessoa com as informações coletadas
+    const pessoa: Pessoa = 
+    {
+      id: parseInt(id, 10), // Converter ID para número inteiro
       nome: nome,
       nomeFantasia: nomeFantasia,
       numDocumento: numDocumento,
       tipo: tipo,
-      enderecos: [{
-        id: 0,
-        logradouro: logradouro,
-        numero: numero,
-        complemento: complemento,
-        bairro: bairro,
-        cidade: cidade,
-        estado: estado,
-        cep: cep,
-        pessoaId: 0 
-      }],
-      contatos: [{
-        id: 0,
-        email: email,
-        whatsapp: whatsapp,
-        telefone: telefone,
-        pessoaId: 0 
-      }],
-      criadoEm: criadoEm.toISOString(),
-      atualizadoEm: atualizadoEm.toISOString(),
-      observacoes: observacoes
+      observacoes: observacoes,
+      enderecos: null,
+      contatos: null,
+      criadoEm: ''
     };
 
     try {
-      const response = await axios.post('http://localhost:5241/api/pessoas/cadastrar/v2', pessoa, {
+      // Realizar a requisição PUT para o endpoint correto
+      const response = await axios.put(`http://localhost:5241/api/pessoas/alterar/${id}`, pessoa, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
       console.log(response.data);
       if (toast.current) {
-        toast.current.show({ severity: 'success', summary: 'Cadastro realizado com sucesso!', detail: 'Pessoa cadastrada com sucesso.' });
+        toast.current.show({ severity: 'success', summary: 'Atualização realizada com sucesso!', detail: 'Pessoa atualizada com sucesso.' });
       }
     } catch (error) {
-      console.error('Erro ao cadastrar pessoa:', error);
+      console.error('Erro ao editar pessoa:', error);
       if (toast.current) {
-        toast.current.show({ severity: 'error', summary: 'Erro ao cadastrar pessoa!', detail: 'Verifique os dados informados.' });
+        toast.current.show({ severity: 'error', summary: 'Erro ao editar pessoa!', detail: 'Verifique os dados informados.' });
       }
     }
   };
 
-  const limparFormulario = () => {
-    setNome("");
-    setNomeFantasia("");
-    setNumDocumento("");
-    setTipo("");
-    setLogradouro("");
-    setNumero("");
-    setComplemento("");
-    setBairro("");
-    setCidade("");
-    setEstado("");
-    setCep("");
-    setEmail("");
-    setWhatsapp("");
-    setTelefone("");
-    setObservacoes("");
-  };
-
   return (
     <div className="pessoa-cadastrar">
-      <Card title="Cadastrar Pessoa">
+      <Card title="Editar Pessoa">
         <Toast ref={toast} />
-        <form onSubmit={cadastrarPessoa}>
+        <form onSubmit={atualizarPessoa}>
           <div className="mb-3 pb">
             <RadioButton name="tipo" value="juridica" onChange={(e) => setTipo(e.value)} checked={tipo === 'juridica'} />
             <label htmlFor="juridica">Jurídica</label>
@@ -153,8 +170,8 @@ function PessoaCadastrar() {
             <InputText className="p-inputtext-lg w-full" value={observacoes} onChange={(e) => setObservacoes(e.target.value)} placeholder="Observações" />
           </div>
           <div className="mb-3 pb">
-            <Button type="button" severity="secondary" outlined label="Limpar" icon="pi pi-refresh" onClick={limparFormulario} />
-            <Button type="submit" label="Cadastrar" icon="pi pi-user-plus" />
+            <Button type="button" severity="secondary" outlined label="Limpar" icon="pi pi-refresh" onClick={() => window.location.reload()} />
+            <Button type="submit" label="Atualizar" icon="pi pi-save" />
           </div>
         </form>
       </Card>
@@ -162,4 +179,4 @@ function PessoaCadastrar() {
   );
 }
 
-export default PessoaCadastrar;
+export default PessoaEditar;
