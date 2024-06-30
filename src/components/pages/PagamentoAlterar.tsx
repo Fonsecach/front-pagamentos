@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
@@ -7,30 +8,65 @@ import { Calendar } from "primereact/calendar";
 import { Toast } from "primereact/toast";
 import "./PessoaCadastrar.css"; // Usando o mesmo estilo de PessoaCadastrar
 
-function PagamentoCadastrar() {
-  const [valor, setValor] = useState<string | undefined>("");
+function PagamentoAlterar() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [valor, setValor] = useState<string>("");
   const [dataDePagamento, setDataDePagamento] = useState<Date | undefined>(
     new Date()
   );
-  const [pedidoID, setPedidoID] = useState<string | undefined>("");
-  const [devedorID, setDevedorID] = useState<string | undefined>("");
-  const [credorID, setCredorID] = useState<string | undefined>("");
+  const [pedidoID, setPedidoID] = useState<string>("");
+  const [devedorID, setDevedorID] = useState<string>("");
+  const [credorID, setCredorID] = useState<string>("");
   const toast = useRef<Toast>(null);
 
-  const cadastrarPagamento = async (e: React.FormEvent) => {
+  useEffect(() => {
+    console.log("ID do pagamento:", id);
+    const fetchPagamento = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5241/api/pagamentos/exibir/${id}`
+        );
+        const pagamento = response.data;
+        console.log("Dados do pagamento:", pagamento);
+        setValor(pagamento.valor.toString());
+        setDataDePagamento(new Date(pagamento.dataDePagamento));
+        setPedidoID(pagamento.pedidoID.toString());
+        setDevedorID(pagamento.devedorID.toString());
+        setCredorID(pagamento.credorID.toString());
+      } catch (error: unknown) {
+        console.error("Erro ao buscar o pagamento:", error);
+        if (toast.current) {
+          let errorMessage = "Erro ao buscar o pagamento.";
+          if (axios.isAxiosError(error)) {
+            errorMessage = error.response?.data.message || error.message;
+          }
+          toast.current.show({
+            severity: "error",
+            summary: "Erro",
+            detail: errorMessage,
+          });
+        }
+      }
+    };
+
+    fetchPagamento();
+  }, [id]);
+
+  const atualizarPagamento = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const pagamento = {
-      valor: parseFloat(valor!),
+      valor: parseFloat(valor),
       dataDePagamento: dataDePagamento?.toISOString(),
-      pedidoID: parseInt(pedidoID!),
-      devedorID: parseInt(devedorID!),
-      credorID: parseInt(credorID!),
+      pedidoID: parseInt(pedidoID),
+      devedorID: parseInt(devedorID),
+      credorID: parseInt(credorID),
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:5241/api/pagamento/cadastrar",
+      const response = await axios.put(
+        `http://localhost:5241/api/pagamentos/alterar/${id}`,
         pagamento,
         {
           headers: {
@@ -38,39 +74,27 @@ function PagamentoCadastrar() {
           },
         }
       );
+      console.log("Resposta da API:", response.data);
       if (toast.current) {
         toast.current.show({
           severity: "success",
-          summary: "Cadastro realizado com sucesso!",
-          detail: "Pagamento cadastrado com sucesso.",
+          summary: "Atualização realizada com sucesso!",
+          detail: "Pagamento atualizado com sucesso.",
         });
       }
-      limparFormulario();
-    } catch (error: any) {
-      if (error.response) {
-        if (toast.current) {
-          toast.current.show({
-            severity: "error",
-            summary: "Erro ao cadastrar pagamento!",
-            detail: error.response.data.message,
-          });
+      navigate("/pagamentos");
+    } catch (error: unknown) {
+      console.error("Erro ao atualizar o pagamento:", error);
+      if (toast.current) {
+        let errorMessage = "Erro ao atualizar pagamento.";
+        if (axios.isAxiosError(error)) {
+          errorMessage = error.response?.data.message || error.message;
         }
-      } else if (error.request) {
-        if (toast.current) {
-          toast.current.show({
-            severity: "error",
-            summary: "Erro ao cadastrar pagamento!",
-            detail: "Sem resposta do servidor",
-          });
-        }
-      } else {
-        if (toast.current) {
-          toast.current.show({
-            severity: "error",
-            summary: "Erro ao cadastrar pagamento!",
-            detail: error.message,
-          });
-        }
+        toast.current.show({
+          severity: "error",
+          summary: "Erro ao atualizar pagamento!",
+          detail: errorMessage,
+        });
       }
     }
   };
@@ -84,10 +108,10 @@ function PagamentoCadastrar() {
   };
 
   return (
-    <div className="pagamento-cadastrar">
-      <Card title="Cadastrar Pagamento">
+    <div className="pagamento-alterar">
+      <Card title="Alterar Pagamento">
         <Toast ref={toast} />
-        <form onSubmit={cadastrarPagamento}>
+        <form onSubmit={atualizarPagamento}>
           <div className="mb-3 pb">
             <InputText
               className="p-inputtext-lg w-full"
@@ -142,7 +166,7 @@ function PagamentoCadastrar() {
               icon="pi pi-refresh"
               onClick={limparFormulario}
             />
-            <Button type="submit" label="Cadastrar" icon="pi pi-save" />
+            <Button type="submit" label="Atualizar" icon="pi pi-save" />
           </div>
         </form>
       </Card>
@@ -150,4 +174,4 @@ function PagamentoCadastrar() {
   );
 }
 
-export default PagamentoCadastrar;
+export default PagamentoAlterar;

@@ -65,6 +65,7 @@ const Pedidos = () => {
             />
           </Link>
           <DataTable value={pedidos} tableStyle={{ minWidth: "50rem" }}>
+            <Column field="id" header="ID"></Column>
             <Column field="nome" header="Nome"></Column>
             <Column field="descricao" header="Descrição"></Column>
             <Column field="valorTotal" header="Valor Total"></Column>
