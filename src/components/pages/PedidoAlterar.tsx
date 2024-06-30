@@ -14,8 +14,10 @@ function PedidoAlterar() {
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
   const [valorTotal, setValorTotal] = useState("");
-  const [dataDoPedido, setDataDoPedido] = useState<Date | Date[]>(new Date());
-  const [dataDoVencimento, setDataDoVencimento] = useState<Date | Date[]>(
+  const [dataDoPedido, setDataDoPedido] = useState<Date | undefined>(
+    new Date()
+  );
+  const [dataDoVencimento, setDataDoVencimento] = useState<Date | undefined>(
     new Date()
   );
   const [devedorID, setDevedorID] = useState<number | null>(null);
@@ -58,8 +60,8 @@ function PedidoAlterar() {
       nome: nome,
       descricao: descricao,
       valorTotal: parseFloat(valorTotal),
-      dataDoPedido: (dataDoPedido as Date).toISOString(),
-      dataDoVencimento: (dataDoVencimento as Date).toISOString(),
+      dataDoPedido: dataDoPedido?.toISOString(),
+      dataDoVencimento: dataDoVencimento?.toISOString(),
       devedorID: devedorID,
       credorID: credorID,
     };
@@ -174,7 +176,7 @@ function PedidoAlterar() {
           <div className="mb-3 pb">
             <InputText
               className="p-inputtext-lg w-full"
-              value={devedorID || ""}
+              value={devedorID !== null ? devedorID.toString() : ""}
               onChange={(e) => setDevedorID(parseInt(e.target.value))}
               placeholder="ID do Devedor"
               required
@@ -183,7 +185,7 @@ function PedidoAlterar() {
           <div className="mb-3 pb">
             <InputText
               className="p-inputtext-lg w-full"
-              value={credorID || ""}
+              value={credorID !== null ? credorID.toString() : ""}
               onChange={(e) => setCredorID(parseInt(e.target.value))}
               placeholder="ID do Credor"
               required

@@ -5,18 +5,20 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { Toast } from "primereact/toast";
-import "./PessoaCadastrar.css"; // Usando o mesmo estilo de PessoaCadastrar
+import "./PessoaCadastrar.css";
 
 function PedidoCadastrar() {
-  const [nome, setNome] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [valorTotal, setValorTotal] = useState("");
-  const [dataDoPedido, setDataDoPedido] = useState<Date | Date[]>(new Date());
-  const [dataDoVencimento, setDataDoVencimento] = useState<Date | Date[]>(
+  const [nome, setNome] = useState<string | undefined>("");
+  const [descricao, setDescricao] = useState<string | undefined>("");
+  const [valorTotal, setValorTotal] = useState<string | undefined>("");
+  const [dataDoPedido, setDataDoPedido] = useState<Date | undefined>(
     new Date()
   );
-  const [devedorID, setDevedorID] = useState<number | null>(null);
-  const [credorID, setCredorID] = useState<number | null>(null);
+  const [dataDoVencimento, setDataDoVencimento] = useState<Date | undefined>(
+    new Date()
+  );
+  const [devedorID, setDevedorID] = useState<string | undefined>("");
+  const [credorID, setCredorID] = useState<string | undefined>("");
   const toast = useRef<Toast>(null);
 
   const cadastrarPedido = async (e: React.FormEvent) => {
@@ -25,11 +27,11 @@ function PedidoCadastrar() {
     const pedido = {
       nome: nome,
       descricao: descricao,
-      valorTotal: parseFloat(valorTotal),
-      dataDoPedido: (dataDoPedido as Date).toISOString(),
-      dataDoVencimento: (dataDoVencimento as Date).toISOString(),
-      devedorID: devedorID,
-      credorID: credorID,
+      valorTotal: parseFloat(valorTotal!),
+      dataDoPedido: dataDoPedido?.toISOString(),
+      dataDoVencimento: dataDoVencimento?.toISOString(),
+      devedorID: parseInt(devedorID!),
+      credorID: parseInt(credorID!),
     };
 
     try {
@@ -85,8 +87,8 @@ function PedidoCadastrar() {
     setValorTotal("");
     setDataDoPedido(new Date());
     setDataDoVencimento(new Date());
-    setDevedorID(null);
-    setCredorID(null);
+    setDevedorID("");
+    setCredorID("");
   };
 
   return (
@@ -142,8 +144,8 @@ function PedidoCadastrar() {
           <div className="mb-3 pb">
             <InputText
               className="p-inputtext-lg w-full"
-              value={devedorID || ""}
-              onChange={(e) => setDevedorID(parseInt(e.target.value))}
+              value={devedorID}
+              onChange={(e) => setDevedorID(e.target.value)}
               placeholder="ID do Devedor"
               required
             />
@@ -151,8 +153,8 @@ function PedidoCadastrar() {
           <div className="mb-3 pb">
             <InputText
               className="p-inputtext-lg w-full"
-              value={credorID || ""}
-              onChange={(e) => setCredorID(parseInt(e.target.value))}
+              value={credorID}
+              onChange={(e) => setCredorID(e.target.value)}
               placeholder="ID do Credor"
               required
             />
