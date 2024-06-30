@@ -48,17 +48,17 @@ function PessoaEditar() {
       numDocumento: numDocumento,
       tipo: tipo,
       observacoes: observacoes,
-      enderecos: null,
-      contatos: null,
-      criadoEm: '' 
+      enderecos: [] || null,
+      contatos: [] || null,
+      criadoEm: new Date().toISOString()
     };
-  
+
     axios.put(`http://localhost:5241/api/pessoas/alterar/${id}`, pessoa)
       .then(() => {
         if (toast.current) {
             (toast.current as Toast).show({ severity: 'success', summary: 'Sucesso', detail: 'Pessoa atualizada', life: 3000 });
         }
-        navigate(`/pessoas/${id}`);
+        navigate(`/pessoas/`);
       })
       .catch(() => {
         if (toast.current) {
