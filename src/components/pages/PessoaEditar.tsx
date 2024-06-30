@@ -94,31 +94,31 @@ function PessoaEditar() {
             <InputText className="p-inputtext-lg w-full"  placeholder='Logradouro' />
           </div>
           <div className="mb-3 pb">
-            <InputText className="p-inputtext-lg w-full" />
+            <InputText className="p-inputtext-lg w-full"  placeholder='Numero' />
           </div>
           <div className="mb-3 pb">
-            <InputText className="p-inputtext-lg w-full" />
+            <InputText className="p-inputtext-lg w-full" placeholder='Complemento' />
           </div>
           <div className="mb-3 pb">
-            <InputText className="p-inputtext-lg w-full" />
+            <InputText className="p-inputtext-lg w-full" placeholder='Bairro' />
           </div>
           <div className="mb-3 pb">
-            <InputText className="p-inputtext-lg w-full" />
+            <InputText className="p-inputtext-lg w-full" placeholder='Cidade' />
           </div>
           <div className="mb-3 pb">
-            <InputText className="p-inputtext-lg w-full" />
+            <InputText className="p-inputtext-lg w-full" placeholder='Estado' />
           </div>
           <div className="mb-3 pb">
-            <InputText className="p-inputtext-lg w-full" />
+            <InputText className="p-inputtext-lg w-full" placeholder='CEP' />
           </div>
           <div className="mb-3 pb">
-            <InputText className="p-inputtext-lg w-full" />
+            <InputText className="p-inputtext-lg w-full" placeholder='Email' />
           </div>
           <div className="mb-3 pb">
-            <InputText className="p-inputtext-lg w-full" />
+            <InputText className="p-inputtext-lg w-full" placeholder='WhatsApp' />
           </div>
           <div className="mb-3 pb">
-            <InputText className="p-inputtext-lg w-full" />
+            <InputText className="p-inputtext-lg w-full" placeholder='Telefone' />
           </div>
           <div className="mb-3 pb">
             <Button type="button" severity="secondary" outlined label="Limpar" icon="pi pi-refresh" onClick={() => window.location.reload()} />
